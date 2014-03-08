@@ -20,12 +20,6 @@ printf "
     #          answer [y/n] according to your needs.             #
     ##############################################################\n\n"
 
-
-
-#initialize bastille & fail2ban as not installed
-bastilleinstalled = n
-fail2baninstalled = n
-
 # Questions function
 function questions() {
 read -p "Do you want to add Google's and Level3's Public DNS to the resolv.conf file? [y/n]" answerGoogleDNS
@@ -76,7 +70,7 @@ elif [[ $1 = -s ]] ; then
         answerFail2ban=y
         answerCurl=y
         answerPhp=y
-        answerMysql=y
+        answerMysql=n
         answerLeopardFlower=y
 
 elif [[ $1 = -h ]] ; then
@@ -92,21 +86,21 @@ fi
 
 if [[ $answerGoogleDNS = y ]] ; then
 
-    echo nameserver 8.8.8.8 >> /etc/resolv.conf
-    echo nameserver 8.8.4.4 >> /etc/resolv.conf
-    echo nameserver 4.2.2.2 >> /etc/resolv.conf
+    sudo echo nameserver 8.8.8.8 >> /etc/resolv.conf
+    sudo echo nameserver 8.8.4.4 >> /etc/resolv.conf
+    sudo echo nameserver 4.2.2.2 >> /etc/resolv.conf
 fi
 
-if [[ $answerWegettinghard = y]] ; then  #Commented out several lines.  Dumping this text to text file with directions
-    sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config  #automated above lines for ssh config
-    echo LABEL=/boot     /boot     ext2     defaults,ro     1 2 >> /etc/fstab
-    echo Ignore ICMP request: >> /etc/sysctl.conf
-    echo net.ipv4.icmp_echo_ignore_all = 1 >> /etc/sysctl.conf
-    echo Ignore Broadcast request: >> /etc/sysctl.conf
-    echo net.ipv4.icmp_echo_ignore_broadcasts = 1 >> /etc/sysctl.conf
-    net.ipv6.conf.all.disable_ipv6 = 1
-    net.ipv6.conf.default.disable_ipv6 = 1
-    net.ipv6.conf.lo.disable_ipv6 = 1
+if [[ $answerWegettinghard = y ]] ; then
+    #sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+    sudo echo LABEL=/boot     /boot     ext2     defaults,ro     1 2 >> /etc/fstab
+    sudo echo Ignore ICMP request: >> /etc/sysctl.conf
+    sudo echo net.ipv4.icmp_echo_ignore_all = 1 >> /etc/sysctl.conf
+    sudo echo Ignore Broadcast request: >> /etc/sysctl.conf
+    sudo echo net.ipv4.icmp_echo_ignore_broadcasts = 1 >> /etc/sysctl.conf
+    sudo echo net.ipv6.conf.all.disable_ipv6 = 1
+    sudo echo net.ipv6.conf.default.disable_ipv6 = 1
+    sudo echo net.ipv6.conf.lo.disable_ipv6 = 1
     sudo sysctl -p
 fi
 
@@ -114,20 +108,43 @@ if [[ $answerUpdate = y ]] ; then
 
     printf "Updating Ubuntu, this stage may take about an hour to complete...Hope you have some time to burn...
     "
-    apt-get update -qq && apt-get -y upgrade -qq && apt-get -y dist-upgrade -qq
+    sudo apt-get update 
+    sudo apt-get upgrade
 fi
 
 if [[ $answerBastille = y ]] ; then
+    printf " 
+#
+#
+#installing Bastille
+#
+#"
     sudo apt-get install bastille perl-tk
-    bastilleinstalled = y
+    sudo bastille
 fi
 
 if [[ $answerFail2ban = y ]] ; then
-    apt-get install fail2ban
-    fail2baninstalled = y
+    printf " 
+#
+#
+#installing fail2ban
+#
+#"
+    sudo apt-get install fail2ban
+    sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+    sed -i '/s/enabled  = true/enabled = false/g'/etc/fail2ban/jail.local
+    sed -i '/s/600/360000/g' /etc/fail2ban/jail.local
+    printf"Restarting Fail2ban..."
+    sudo service fail2ban restart
 fi
 
 if [[ $answerOpenVAS = y ]] ; then
+    printf " 
+#
+#
+#installing OpenVAS
+#
+#"
     sudo add-apt-repository ppa:openvas/stable
     sudo apt-get install openvas-scanner openvas-manager openvas-administrator greenbone-security-assistant openvas-cli openvas-check-setup gsd
     sudo apt-get install xsltproc sqlite3
@@ -153,28 +170,58 @@ if [[ $answerOpenVAS = y ]] ; then
 fi
 
 if [[ $answerCurl = y ]] ; then
-    apt-get install curl
+    printf " 
+#
+#
+#installing Curl
+#
+#"
+    sudo apt-get install curl
 fi
 
-if [[ $answerNikto = y]] ; then
+if [[ $answerNikto = y ]] ; then
+    printf " 
+#
+#
+#installing Nikto
+#
+#"
     wget https://www.cirt.net/nikto/nikto-2.1.5.tar.bz2
-    tar -zxvf nikto-2.1.5.tar.bz2
-    chmod +x /nikto-2.1.5/nikto.pl
+    tar xjf nikto-2.1.5.tar.bz2
+    sudo chmod +x nikto-2.1.5.tar.bz2
     printf " To start Nikto run 'cd nikto-2.1.4' and 'perl nikto.pl'
     "
 fi
 
-if [[ $answerPhp = y]] ; then
-    apt-get install php5-mysql
+if [[ $answerPhp = y ]] ; then
+    printf " 
+#
+#
+#installing PHP
+#
+#"
+    sudo apt-get install php5-mysql
     sed -i 's/memory_limit = 128M/memory_limit = 8M' /etc/php5/apache/php.ini
 fi
 
 if [[ $answerLeopardFlower = y ]] ; then
+    printf " 
+#
+#
+#downloading leopard flower
+#
+#"
     wget http://iweb.dl.sourceforge.net/project/leopardflower/Source/lpfw-0.4-src.zip
 fi
 
-if [[ $answerMysql = y]] ; then
-    apt-get install mysql-server
+if [[ $answerMysql = y ]] ; then
+    printf " 
+#
+#
+#installing Mysql
+#
+#"
+    sudo apt-get install mysql-server
     printf " Starting mysql_secure_installation script...standby for input..."
     mysql_secure_installation
 fi
@@ -203,61 +250,6 @@ fi
 function pause () {
         read -p "$*"
 }
-
-if [[ $bastilleinstalled = y]] ; then
-    read -p "Do you want to configure Bastille? [y/n]" answerConfigBastille
-fi
-
-if [[answerConfigBastille = y]] ;
-    printf"Here we go...."
-    printf"
-
-        #################################
-        #This is what you need to select#
-        #################################
-
-#File permissions module: Yes (suid)
-#Disable SUID for mount/umount: Yes
-#Disable SUID on ping: Yes
-#Disable clear-text r-protocols that use IP-based authentication? Yes
-#Enforce password aging? No (situation dependent, I have no users accessing my machines except me, and I only allow ssh keys)
-#Default umask: Yes
-#Umask: 077
-#Disable root login on tty’s 1-6: No
-#Password protect GRUB prompt: No (situation dependent, I’m on a VPS and would like to get support in case I need it)
-#Password protect su mode: Yes
-#default-deny on tcp-wrappers and xinetd? No
-#Ensure telnet doesn’t run? Yes
-#Ensure FTP does not run? Yes
-#Display authorized use message? No (situation dependent, if you had other users, Yes)
-#Put limits on system resource usage? Yes
-#Restrict console access to group of users? Yes (then choose root)
-#Add additional logging? Yes
-#Setup remote logging if you have a remote log host, I don’t so I answered No
-#Setup process accounting? Yes
-#Disable acpid? Yes
-#Deactivate nfs + samba? Yes (situation dependent)
-#Stop sendmail from running in daemon mode? No (I have this firewalled off, so I’m not concerned)
-#Deactivate apache? Yes
-#Disable printing? Yes
-#TMPDIR/TMP scripts? No (if a multi-user system, yes)
-#Packet filtering script? No (we configured the firewall previously)
-#Finished? YES! & reboot"
-
-fi
-
-if [[fail2baninstalled = y]] ; then
-    read -p "Do you want to configure fail2ban? [y/n]" answerConfigfail2ban
-fi
-
-if [[answerConfigfail2ban = y]] ; then
-    sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
-    sed -i '/s/enabled  = true/enabled = false/g'/etc/fail2ban/jail.local
-    sed -i '/s/600/360000/g' /etc/fail2ban/jail.local
-    printf"Restarting Fail2ban..."
-    sudo service fail2ban restart
-
-
 
 pause '
     Press [Enter] key to exit...
