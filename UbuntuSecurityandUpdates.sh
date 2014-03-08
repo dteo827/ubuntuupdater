@@ -70,7 +70,7 @@ elif [[ $1 = -s ]] ; then
         answerFail2ban=y
         answerCurl=y
         answerPhp=y
-        answerMysql=n
+        answerMysql=y
         answerLeopardFlower=y
 
 elif [[ $1 = -h ]] ; then
