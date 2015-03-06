@@ -100,6 +100,7 @@ fi
 if [[ $answerSecUpdate = y ]] ; then
     sudo echo deb http://old-releases.ubuntu.com/ubuntu/ CODENAME-security main restricted universe multiverse >> /etc/apt/security.sources.list
     sudo apt-get upgrade -o Dir::Etc::SourceList=/etc/apt/security.sources.list
+fi
 
 if [[ $answermasshardening = y ]] ; then  
     sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config  #automated above lines for ssh config
@@ -120,7 +121,6 @@ fi
 if [[ $answerLynis = y ]] ; then
     wget https://cisofy.com/files/lynis-1.6.4.tar.gz -O lynis.tar.gz
     tar -zxvf lynis.tar.gz
-
 fi
 
 if [[ $answerFail2ban = y ]] ; then
