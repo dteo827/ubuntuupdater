@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Ubuntu Configuration and Updater version 1.4
+# Ubuntu Configuration and Updater version 1.0
 # This script is intended for use in Ubuntu Linux Installations
 # Thanks to Pashapasta for the script template, check out the Kali version at https://github.com/PashaPasta/KaliUpdater/blob/master/KaliConfigAndUpdate.sh
 # Please contact dteo827@gmail.com with bugs or feature requests
@@ -77,7 +77,7 @@ if [[ $answerGoogleDNS = y ]] ; then
     echo "Updated DNS resolutions to Google DNS, this task was completed at: " $(date) >> changes
 fi
 
-if [[$answerFixRepos = y ]] ; then
+if [[ $answerFixRepos = y ]] ; then
      #change old repos to archive.ubuntu so they work
     cp /etc/apt/sources.list /etc/apt/sources.list.bak
     # Required
