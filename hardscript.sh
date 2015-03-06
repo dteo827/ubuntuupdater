@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # Ubuntu Configuration and Updater version 1.4
 # This script is intended for use in Ubuntu Linux Installations
@@ -22,18 +22,18 @@ printf "
 
 # Questions function
 function questions() {
-read -p "Do you want to add Google's and Level3's Public DNS to the resolv.conf file? [y/n]" answerGoogleDNS
-read -p "Do you want to fix the secruity repos to archive repos? [y/n]" answerFixRepos
+read -p "Do you want to add Google's and Level3's Public DNS to the resolv.conf file? [y/n] " answerGoogleDNS
+read -p "Do you want to fix the secruity repos to archive repos? [y/n] " answerFixRepos
 read -p "Do you want to install *ONLY* security updates to CentOS Linux now? [y/n] " answerSecUpdate
 read -p "Do you want to install *ALL* updates to Ubuntu Linux now? [y/n] " answerUpdate
-read -p "Do you want to turn off root login, Ipv6, keep boot as read only,and ignore ICMP broadcast requests and prevent XSS attacks? [y/n]" answermasshardening
-read -p "Do you want to install bastille [y/n]" answerBastille
-read -p "Do you want to install Lynis [y/n]" answerLynis
-read -p "Do you want to install Fail2ban [y/n]" answerFail2ban
+read -p "Do you want to turn off root login, Ipv6, keep boot as read only,and ignore ICMP broadcast requests and prevent XSS attacks? [y/n] " answermasshardening
+read -p "Do you want to install bastille [y/n] " answerBastille
+read -p "Do you want to install Lynis [y/n] " answerLynis
+read -p "Do you want to install Fail2ban [y/n] " answerFail2ban
 
 }
 
-echo 'version' 
+echo "version"
 lsb_release -r >> file
 uname -r >> file
 echodate >> file
@@ -57,7 +57,7 @@ if [[ $1 = -a ]] ; then
         answerLynis=y
         answerFail2ban=y
     else
-        printf "Verify what you do and do not want done...."
+        printf "Verify what you do and do not want done.... "
         sleep 2
         questions
 fi
@@ -91,8 +91,7 @@ if [[ $answerFixRepos = y ]] ; then
 fi
 
 if [[ $answerUpdate = y ]] ; then
-    printf "Updating Ubuntu, this stage may take about an hour to complete...Hope you have some time to burn...
-    "
+    printf "Updating Ubuntu, this stage may take about an hour to complete...Hope you have some time to burn... \n"
     apt-get update -qq && apt-get -y upgrade -qq
     echo "Fully Updated Ubuntu release, this task was completed at: " $(date) >> changes
 fi
@@ -103,14 +102,14 @@ if [[ $answerSecUpdate = y ]] ; then
 fi
 
 if [[ $answermasshardening = y ]] ; then  
-    sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config  #automated above lines for ssh config
+    #sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config  #automated above lines for ssh config
     sudo echo Ignore ICMP request: >> /etc/sysctl.conf
     sudo echo net.ipv4.icmp_echo_ignore_all = 1 >> /etc/sysctl.conf
     sudo echo Ignore Broadcast request: >> /etc/sysctl.conf
     sudo echo net.ipv4.icmp_echo_ignore_broadcasts = 1 >> /etc/sysctl.conf
-    sudo echo net.ipv6.conf.all.disable_ipv6 = 1
-    sudo echo net.ipv6.conf.default.disable_ipv6 = 1
-    sudo echo net.ipv6.conf.lo.disable_ipv6 = 1
+    sudo echo net.ipv6.conf.all.disable_ipv6 = 1 >> /etc/sysctl.conf
+    sudo echo net.ipv6.conf.default.disable_ipv6 = 1 >> /etc/sysctl.conf
+    sudo echo net.ipv6.conf.lo.disable_ipv6 = 1 >> /etc/sysctl.conf
     sudo sysctl -p
 fi
 
@@ -128,7 +127,7 @@ if [[ $answerFail2ban = y ]] ; then
 fi
 
 
-echo 'version' 
+echo "version" 
 lsb_release -r >> file2
 uname -r >> file2
 echodate >> file2
