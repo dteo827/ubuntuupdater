@@ -30,7 +30,6 @@ read -p "Do you want to install *ALL* updates to Ubuntu Linux now? [y/n] " answe
 read -p "Do you want to install bastille [y/n] " answerBastille
 read -p "Do you want to install Lynis [y/n] " answerLynis
 read -p "Do you want to install Fail2ban [y/n] " answerFail2ban
-
 }
 
 echo "version"
