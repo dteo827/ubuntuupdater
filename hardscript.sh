@@ -80,11 +80,11 @@ if [[ $answerFixRepos = y ]] ; then
      #change old repos to archive.ubuntu so they work
     cp /etc/apt/sources.list /etc/apt/sources.list.bak
     # Required
-    sudo echo deb http://old-releases.ubuntu.com/ubuntu/ CODENAME main restricted universe multiverse > /etc/apt/sources.list
-    sudo echo deb http://old-releases.ubuntu.com/ubuntu/ CODENAME-updates main restricted universe multiverse >> /etc/apt/sources.list
-    sudo echo deb http://old-releases.ubuntu.com/ubuntu/ CODENAME-security main restricted universe multiverse >> /etc/apt/sources.list
+    sudo echo deb http://old-releases.ubuntu.com/ubuntu/ hardy main restricted universe multiverse > /etc/apt/sources.list
+    sudo echo deb http://old-releases.ubuntu.com/ubuntu/ hardy-updates main restricted universe multiverse >> /etc/apt/sources.list
+    sudo echo deb http://old-releases.ubuntu.com/ubuntu/ hardy-security main restricted universe multiverse >> /etc/apt/sources.list
     # Optional
-    sudo echo deb http://old-releases.ubuntu.com/ubuntu/ CODENAME-backports main restricted universe multiverse >> /etc/apt/sources.list
+    sudo echo deb http://old-releases.ubuntu.com/ubuntu/ hardy-backports main restricted universe multiverse >> /etc/apt/sources.list
 
     echo "Updated Source list, this task was completed at: " $(date) >> changes
 fi
@@ -96,7 +96,7 @@ if [[ $answerUpdate = y ]] ; then
 fi
 
 if [[ $answerSecUpdate = y ]] ; then
-    sudo echo deb http://old-releases.ubuntu.com/ubuntu/ CODENAME-security main restricted universe multiverse >> /etc/apt/security.sources.list
+    sudo echo deb http://old-releases.ubuntu.com/ubuntu/ hardy-security main restricted universe multiverse >> /etc/apt/security.sources.list
     sudo apt-get upgrade -o Dir::Etc::SourceList=/etc/apt/security.sources.list
 fi
 
@@ -126,13 +126,14 @@ if [[ $answerFail2ban = y ]] ; then
 fi
 
 
-echo "version" 
-lsb_release -r >> file2
-uname -r >> file2
-echodate >> file2
-echo "my name" >> file2
-echodpkg -l >> file2
-diff file file2 >> changes
+echo "version"
+lsb_release -r >> file
+uname -r >> file
+echo date >> file
+echo
+echo "my name" >> file
+echo
+echo dpkg -l >> file
 
 
 
