@@ -26,7 +26,7 @@ read -p "Do you want to add Google's and Level3's Public DNS to the resolv.conf 
 read -p "Do you want to fix the secruity repos to archive repos? [y/n] " answerFixRepos
 read -p "Do you want to install *ONLY* security updates to CentOS Linux now? [y/n] " answerSecUpdate
 read -p "Do you want to install *ALL* updates to Ubuntu Linux now? [y/n] " answerUpdate
-read -p "Do you want to turn off root login, Ipv6, keep boot as read only,and ignore ICMP broadcast requests and prevent XSS attacks? [y/n] " answermasshardening
+#read -p "Do you want to turn off root login, Ipv6, keep boot as read only,and ignore ICMP broadcast requests and prevent XSS attacks? [y/n] " answermasshardening
 read -p "Do you want to install bastille [y/n] " answerBastille
 read -p "Do you want to install Lynis [y/n] " answerLynis
 read -p "Do you want to install Fail2ban [y/n] " answerFail2ban
@@ -37,9 +37,7 @@ echo "version"
 lsb_release -r >> file
 uname -r >> file
 echodate >> file
-echo
 echo "my name" >> file
-echo
 echodpkg -l >> file
 
 # Flags!!!!
@@ -131,9 +129,7 @@ echo "version"
 lsb_release -r >> file2
 uname -r >> file2
 echodate >> file2
-echo
 echo "my name" >> file2
-echo
 echodpkg -l >> file2
 diff file file2 >> changes
 
