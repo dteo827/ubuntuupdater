@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 # Ubuntu Configuration and Updater version 1.4
 # This script is intended for use in Ubuntu Linux Installations
@@ -35,9 +35,11 @@ read -p "Do you want to install Fail2ban [y/n] " answerFail2ban
 echo "version"
 lsb_release -r >> file
 uname -r >> file
-echodate >> file
+echo date >> file
+echo
 echo "my name" >> file
-echodpkg -l >> file
+echo
+echo dpkg -l >> file
 
 # Flags!!!!
 # If script run with -a flag, all options will automatically default to yes
@@ -115,7 +117,7 @@ if [[ $answerBastille = y ]] ; then
 fi
 
 if [[ $answerLynis = y ]] ; then
-    wget https://cisofy.com/files/lynis-1.6.4.tar.gz -O lynis.tar.gz
+    wget https://cisofy.com/files/lynis-1.6.4.tar.gz -O lynis.tar.gz --no-check-certificate
     tar -zxvf lynis.tar.gz
 fi
 
