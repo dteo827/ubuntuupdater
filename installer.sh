@@ -28,3 +28,10 @@ fi
 if [[ $answerUpdatePath = y ]] ; then
   PATH=$PATH /sbin/
 fi
+
+function pause () {
+read -p "$*"
+}
+pause '
+press [Enter] key to exit...
+'
