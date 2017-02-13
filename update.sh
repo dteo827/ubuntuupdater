@@ -8,6 +8,4 @@ echo deb http://old-releases.ubuntu.com/ubuntu/ hardy-security main restricted u
 
 echo deb http://old-releases.ubuntu.com/ubuntu/ hardy-backports main restricted universe multiverse >> /etc/apt/sources.list
 
-sudo aptitude update && sudo aptitude safe-upgrade
-
-sudo do-release-upgrade
+sudo apt-get update
